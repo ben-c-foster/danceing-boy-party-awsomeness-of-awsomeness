@@ -7,8 +7,18 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     Boy.setPosition(130, 100)
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
+    otherSprite.destroy(effects.warmRadial, 100)
+})
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     Boy.setPosition(100, 100)
+})
+info.onLifeZero(function () {
+    game.over(true, effects.confetti)
+})
+scene.onHitWall(SpriteKind.Projectile, function (sprite, location) {
+    sprite.destroy(effects.coolRadial, 100)
+    info.changeLifeBy(-1)
 })
 let right: Sprite = null
 let Down: Sprite = null
@@ -17,7 +27,9 @@ let LEft: Sprite = null
 let Lane = 0
 let Boy: Sprite = null
 let Speed = 40
+info.setLife(5)
 scene.setBackgroundColor(15)
+tiles.setCurrentTilemap(tilemap`level1`)
 effects.starField.startScreenEffect()
 Boy = sprites.create(img`
     . . . . . f f f f . . . . . . . 
@@ -61,6 +73,7 @@ game.onUpdateInterval(700, function () {
             `, SpriteKind.Projectile)
         LEft.setVelocity(0, Speed)
         LEft.setPosition(30, 8)
+        music.ringTone(262)
     } else if (Lane == 2) {
         Up = sprites.create(img`
             6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 
@@ -82,6 +95,7 @@ game.onUpdateInterval(700, function () {
             `, SpriteKind.Projectile)
         Up.setVelocity(0, Speed)
         Up.setPosition(60, 8)
+        music.ringTone(392)
     } else if (Lane == 3) {
         Down = sprites.create(img`
             6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 
@@ -103,6 +117,7 @@ game.onUpdateInterval(700, function () {
             `, SpriteKind.Projectile)
         Down.setVelocity(0, Speed)
         Down.setPosition(100, 8)
+        music.ringTone(880)
     } else if (Lane == 4) {
         right = sprites.create(img`
             6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 
@@ -124,6 +139,7 @@ game.onUpdateInterval(700, function () {
             `, SpriteKind.Projectile)
         right.setVelocity(0, Speed)
         right.setPosition(130, 8)
+        music.ringTone(147)
     }
 })
 game.onUpdateInterval(2000, function () {
